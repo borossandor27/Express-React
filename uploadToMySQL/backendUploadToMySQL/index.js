@@ -44,7 +44,6 @@ app.post('/upload', upload.single('audio'), async (req, res) => {
     const originalName = req.file.originalname;
     const storedName = req.file.filename;
     const uploadTime = new Date();
-    console.log(album, originalName, comment, storedName, uploadTime);
     // Ellenőrizzük, hogy a fájl már létezik-e az adatbázisban
     const [existingFile] = await pool.execute(
       'SELECT * FROM zeneszamok WHERE eredeti_fajlnev = ? AND album = ?',
@@ -53,20 +52,23 @@ app.post('/upload', upload.single('audio'), async (req, res) => {
     if (existingFile.length > 0) {
       return res.status(400).json({ error: 'Ez a fájl már létezik az adatbázisban.' });
     }
-    // Ellenőrizzük, hogy a fájl már létezik-e a mappában
-    const filePath = path.join(__dirname, 'uploads', storedName);
-    if (fs.existsSync(filePath)) {
-      return res.status(400).json({ error: 'Ez a fájl már létezik a mappában.' });
-    }
+    
     // Ellenőrizzük, hogy a fájl mérete megfelelő-e
     const fileSize = req.file.size; // fájl mérete byte-ban
-    const maxSize = 10 * 1024 * 1024; // 10 MB
+    const maxSize = 20 * 1024 * 1024; // 20 MB
     if (fileSize > maxSize) {
       fs.unlinkSync(filePath); // töröljük a fájlt
-      return res.status(400).json({ error: 'A fájl mérete meghaladja a 10 MB-ot.' });
+      return res.status(400).json({ error: 'A fájl mérete meghaladja a 20 MB-ot.' });
     }
-    // Ellenőrizzük, hogy az album neve megfelelő-e
-    
+    console.log('Feltöltés sikeres:', storedName);
+    // Ellenőrizzük, hogy a fájl formátuma megfelelő-e
+    const allowedFormats = ['mp3', 'wav', 'ogg'];
+    const fileFormat = path.extname(originalName).slice(1).toLowerCase();
+    if (!allowedFormats.includes(fileFormat)) {
+      fs.unlinkSync(filePath); // töröljük a fájlt
+      return res.status(400).json({ error: 'Csak MP3, WAV vagy OGG fájlok engedélyezettek.' });
+    }
+    // Adatbázisba írás
     const [result] = await pool.execute(
       'INSERT INTO zeneszamok (album, eredeti_fajlnev, megjegyzes, tarolt_fajlnev, feltoltes_idopont) VALUES (?, ?, ?, ?, ?)',
       [album, originalName, comment, storedName, uploadTime]

@@ -5,7 +5,7 @@ export const pool = mysql.createPool({
   user: 'root',         // Állítsd be a saját MySQL felhasználóneved
   password: '',         // Állítsd be a saját jelszavad
   database: 'zeneapp',  // Adatbázis neve
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
+  waitForConnections: true, // Várakozás a kapcsolatokra
+  connectionLimit: 10,  // Maximális kapcsolatok száma
+  queueLimit: 0        // Nincs korlátozás a várakozó kapcsolatok számára
 });
