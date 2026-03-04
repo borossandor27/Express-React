@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Teszt Felület</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: white;
+        }
+
+        .tab:hover {
+            color: #667eea;
+        }
+
+        .forms {
+            padding: 40px;
+        }
+
+        .form {
+            display: none;
+        }
+
+        .form.active {
+            display: block;
+        }
+
+        h2 {
+            margin-bottom: 30px;
+            color: #333;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+
+        .info pre {
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" onclick="showForm('login')">Bejelentkezés</div>
+            <div class="tab" onclick="showForm('register')">Regisztráció</div>
+            <div class="tab" onclick="showForm('delete')">Felhasználó törlése</div>
+        </div>
+
+        <div class="forms">
+            <!-- Bejelentkezési űrlap -->
+            <div id="loginForm" class="form active">
+                <h2>Bejelentkezés</h2>
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">Email cím</label>
+                        <input type="email" id="loginEmail" placeholder="pelda@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Jelszó</label>
+                        <input type="password" id="loginPassword" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn">Bejelentkezés</button>
+                </form>
+                <div id="loginMessage" class="message"></div>
+            </div>
+
+            <!-- Regisztrációs űrlap -->
+            <div id="registerForm" class="form">
+                <h2>Regisztráció</h2>
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="registerEmail">Email cím</label>
+                        <input type="email" id="registerEmail" placeholder="pelda@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Jelszó</label>
+                        <input type="password" id="registerPassword" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Jelszó megerősítése</label>
+                        <input type="password" id="registerConfirmPassword" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn">Regisztráció</button>
+                </form>
+                <div id="registerMessage" class="message"></div>
+            </div>
+
+            <!-- Felhasználó törlése űrlap -->
+            <div id="deleteForm" class="form">
+                <h2>Felhasználó törlése</h2>
+                <form onsubmit="handleDelete(event)">
+                    <div class="form-group">
+                        <label for="deleteEmail">Email cím</label>
+                        <input type="email" id="deleteEmail" placeholder="pelda@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="deletePassword">Jelszó</label>
+                        <input type="password" id="deletePassword" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn delete-btn">Felhasználó törlése</button>
+                </form>
+                <div id="deleteMessage" class="message"></div>
+            </div>
+
+            <!-- Információk -->
+            <div class="info">
+                <strong>🔐 API információk:</strong>
+                <pre>
+POST  /api/auth/register  - Regisztráció
+POST  /api/auth/login      - Bejelentkezés
+DELETE /api/auth/delete    - Felhasználó törlése (JWT token szükséges!)
+                </pre>
+                <p><small>Token alapú törléshez előbb jelentkezz be, majd a böngésző konzolban állítsd be a tokent:</small></p>
+                <pre>localStorage.setItem('token', 'itt_a_token');</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api/auth';
+
+        // Lapozás
+        function showForm(formName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.form').forEach(form => form.classList.remove('active'));
+            
+            if (formName === 'login') {
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else if (formName === 'register') {
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+            } else if (formName === 'delete') {
+                document.querySelector('.tab:nth-child(3)').classList.add('active');
+                document.getElementById('deleteForm').classList.add('active');
+            }
+        }
+
+        // Segédfüggvény üzenetek megjelenítésére
+        function showMessage(elementId, message, isSuccess) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = 'message ' + (isSuccess ? 'success' : 'error');
+        }
+
+        // Regisztráció kezelése
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+
+            // Jelszó ellenőrzés
+            if (password !== confirmPassword) {
+                showMessage('registerMessage', 'A jelszavak nem egyeznek!', false);
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage('registerMessage', 'A jelszónak legalább 6 karakter hosszúnak kell lennie!', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage('registerMessage', '✅ Sikeres regisztráció! Most már bejelentkezhetsz.', true);
+                    document.getElementById('registerForm').reset();
+                    
+                    // Automatikusan átvált a bejelentkezésre 2 másodperc után
+                    setTimeout(() => showForm('login'), 2000);
+                } else {
+                    showMessage('registerMessage', `❌ Hiba: ${data.message || 'Ismeretlen hiba'}`, false);
+                }
+            } catch (error) {
+                showMessage('registerMessage', '❌ Hálózati hiba! Ellenőrizd, hogy fut-e a szerver.', false);
+                console.error('Register error:', error);
+            }
+        }
+
+        // Bejelentkezés kezelése
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Token mentése (törléshez kell majd)
+                    localStorage.setItem('token', data.token);
+                    
+                    showMessage('loginMessage', 
+                        `✅ Sikeres bejelentkezés!\n\nToken: ${data.token.substring(0, 20)}...`, 
+                        true);
+                    
+                    console.log('Bejelentkezett felhasználó:', data.user);
+                } else {
+                    showMessage('loginMessage', `❌ Hiba: ${data.message || 'Hibás email vagy jelszó'}`, false);
+                }
+            } catch (error) {
+                showMessage('loginMessage', '❌ Hálózati hiba! Ellenőrizd, hogy fut-e a szerver.', false);
+                console.error('Login error:', error);
+            }
+        }
+
+        // Felhasználó törlése
+        async function handleDelete(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('deleteEmail').value;
+            const password = document.getElementById('deletePassword').value;
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                showMessage('deleteMessage', 
+                    '❌ Nincs token! Előbb jelentkezz be, hogy tokent kapj!', 
+                    false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/delete`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage('deleteMessage', '✅ Felhasználó sikeresen törölve!', true);
+                    document.getElementById('deleteForm').reset();
+                    localStorage.removeItem('token'); // Token törlése
+                    
+                    // Automatikusan átvált a regisztrációra 2 másodperc után
+                    setTimeout(() => showForm('register'), 2000);
+                } else {
+                    showMessage('deleteMessage', `❌ Hiba: ${data.message || 'Nem sikerült törölni'}`, false);
+                }
+            } catch (error) {
+                showMessage('deleteMessage', '❌ Hálózati hiba! Ellenőrizd, hogy fut-e a szerver.', false);
+                console.error('Delete error:', error);
+            }
+        }
+
+        // Token megjelenítése a konzolban (segítség)
+        console.log('🔑 Auth teszt oldal betöltve!');
+        console.log('Ha van token, itt láthatod:', localStorage.getItem('token'));
+    </script>
+</body>
+</html>

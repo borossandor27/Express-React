@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Bejelentkezés teszt</h2>
+    <form id="loginForm">
+        <input type="email" id="email" value="test@example.com" /><br>
+        <input type="password" id="password" value="password123" /><br>
+        <button type="submit">Küldés</button>
+    </form>
+    <pre id="result"></pre>
+
+    <script>
+        document.getElementById('loginForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const response = await fetch('http://localhost:5000/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: document.getElementById('email').value,
+                    password: document.getElementById('password').value
+                })
+            });
+            const data = await response.json();
+            document.getElementById('result').textContent = 
+                JSON.stringify(data, null, 2);
+        };
+    </script>
+</body>
+</html>

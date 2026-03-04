@@ -1,9 +1,12 @@
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
-const secret = 'your_jwt_secret';
+dotenv.config();
+
+const secret = process.env.JWT_MY_SECRET || 'your_jwt_secret';
 
 export const authenticate = (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
+  const token = req.header('Authorization')?.replace('Bearer ', ''); // Token a headerből
 
   if (!token) {
     return res.status(401).json({ error: 'Access denied. No token provided.' });

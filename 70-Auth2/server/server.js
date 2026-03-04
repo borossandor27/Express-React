@@ -16,11 +16,13 @@ app.use('/api/auth', authRoutes);
 app.get('/', (req, res) => {
   res.send('Belépés az alkalmazásba az /api/auth útvonalon keresztül.');
 });
-
+app.get('/protected', (req, res) => {
+  res.send('Ez egy védett útvonal, csak érvényes JWT tokennel érhető el.');
+});
 app.get( (req, res) => {
   res.status(404).json({ message: 'Az oldal nem található.' });
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
