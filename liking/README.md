@@ -18,4 +18,16 @@ Aadatbázis kezelőnek a MySQL-t használjuk.
 
 ## Express backend
 
+Az Express.js keretrendszert használjuk a backend fejlesztéséhez.
+Felelős a termékek kezeléséért és a kedvelések számának frissítéséért az adatbázisban.
+
+### Végpontjai
+
+- `GET /api/products`: Lekéri az összes terméket az adatbázisból.
+- `POST /api/products/:id/like`: Növeli a megadott termék kedveléseinek számát.
+- `DELETE /api/products/:id/like`: Csökkenti a megadott termék kedveléseinek számát.
+- `PUT /api/products/:id`: Frissíti a megadott termék adatait.
+- `DELETE /api/products/:id`: Törli a megadott terméket az adatbázisból.
+- `POST /api/products`: Létrehoz egy új terméket az adatbázisban.
+
 ## Kedvelés számláló React alkalmazás
