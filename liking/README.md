@@ -23,11 +23,11 @@ Felelős a termékek kezeléséért és a kedvelések számának frissítéséé
 
 ### Végpontjai
 
-- `GET /api/products`: Lekéri az összes terméket az adatbázisból.
-- `POST /api/products/:id/like`: Növeli a megadott termék kedveléseinek számát.
-- `DELETE /api/products/:id/like`: Csökkenti a megadott termék kedveléseinek számát.
-- `PUT /api/products/:id`: Frissíti a megadott termék adatait.
-- `DELETE /api/products/:id`: Törli a megadott terméket az adatbázisból.
-- `POST /api/products`: Létrehoz egy új terméket az adatbázisban.
-
+- `GET /api/products` — összes termék listázása
+- `GET /api/products/:id` — egy termék lekérése
+- `POST /api/products` — új termék létrehozása ({ text, likes })
+- `PUT /api/products/:id` — termék frissítése
+- `DELETE /api/products/:id` — termék törlése
+- `PATCH /api/products/:id/like` — kedvelés növelése eggyel
+  
 ## Kedvelés számláló React alkalmazás
